@@ -203,7 +203,7 @@ public class MemberController {
 		Place place = memberService.getPlace(form.getPlaceId());
 		
 		//存在しないidであれば一覧画面へリダイレクト
-		if (position == null || place == null) {
+		if (Objects.isNull(position) || Objects.isNull(place)) {
 			return "redirect:/member/list";
 		}
 		
@@ -262,7 +262,8 @@ public class MemberController {
 		Position position = member.getPosition();
 		Place place = member.getPlace();
 		
-		if (position == null || place == null) {
+		if (Objects.isNull(position) || Objects.isNull(place)) {
+			//メンバー一覧へ
 			return "redirect:/member/list";
 		}
 		
