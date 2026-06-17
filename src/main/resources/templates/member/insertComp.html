@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" type="text/css" href="/css/common.css">
+		<title>新規登録</title>
+	</head>
+	<body>
+		<div id="wapper">
+			<div class="menu">
+				<a href="../">メニュー</a><br>
+			</div>
+			<div class="menu">
+				<h2>新規登録&nbsp;完了画面</h2>
+				<p>以下のデータが登録されました</p>
+			</div>
+			<form th:object="${member}">
+				<table class="ct">
+					<tr>
+						<th>社員ID</th>
+						<td th:text="*{memberId}"></td>
+					</tr>
+					<tr>
+						<th>氏名</th>
+						<td th:text="*{memberName}"></td>
+					</tr>
+					<tr>
+						<th>年齢</th>
+						<td th:text="*{age}"></td>
+					</tr>
+					<tr>
+						<th>性別</th>
+						<td th:text="*{sexFlg == 0 ? '男' : '女'}"></td>
+					</tr>
+					<tr>
+						<th>住所</th>
+						<td th:text="*{address}"></td>
+					</tr>
+					<tr>
+						<th>電話番号</th>
+						<td th:text="*{telephone}"></td>
+					</tr>
+					<tr>
+						<th>メールアドレス</th>
+						<td th:text="*{mail}"></td>
+					</tr>
+					<tr>
+						<th>役職</th>
+						<td th:text="${positionName}"></td>
+					</tr>
+					<tr>
+						<th>事業所</th>
+						<td th:text="${placeName}"></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>

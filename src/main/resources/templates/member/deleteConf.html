@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" type="text/css" href="/css/common.css">
+		<title>削除</title>
+	</head>
+	<body>
+		<div id="wapper">
+			<div class="menu">
+				<a href="/">メニュー</a><br>
+				<a href="/member/list">メンバ一覧</a><br>
+			</div>
+			<div class="menu">
+				<h2>削除確認画面</h2>
+				<p>以下のデータを削除します&nbsp;よろしいですか</p>
+			</div>
+			<form th:object="${member}" th:action="@{/member/deleteComp/{id}(id=*{memberId})}" method="post">
+				<table class="ct">
+					<tr>
+						<th>社員ID</th>
+						<td th:text="*{memberId}"></td>
+						<input type="hidden" th:field="*{memberId}">
+					</tr>
+					<tr>
+						<th>氏名</th>
+						<td th:text="*{memberName}"></td>
+						<input type="hidden" th:field="*{memberName}">
+					</tr>
+					<tr>
+						<th>年齢</th>
+						<td th:text="*{age}"></td>
+						<input type="hidden" th:field="*{age}">
+					</tr>
+					<tr>
+						<th>性別</th>
+						<td th:text="*{sexFlg==0 ? '男' : '女'}"></td>
+						<input type="hidden" th:field="*{sexFlg}">
+					</tr>
+					<tr>
+						<th>住所</th>
+						<td th:text="*{address}"></td>
+						<input type="hidden" th:field="*{address}">
+					</tr>
+					<tr>
+						<th>電話番号</th>
+						<td th:text="*{telephone}"></td>
+						<input type="hidden" th:field="*{telephone}">
+					</tr>
+					<tr>
+						<th>メールアドレス</th>
+						<td th:text="*{mail}"></td>
+						<input type="hidden" th:field="*{mail}">
+					</tr>
+					<tr>
+						<th>役職</th>
+						<td th:text="${positionName}"></td>
+						<input type="hidden" th:field="*{position}">
+					</tr>
+					<tr>
+						<th>事業所</th>
+						<td th:text="${placeName}"></td>
+						<input type="hidden" th:field="*{place}">
+					</tr>
+				</table>
+				<div class="menu">
+					<input type="submit" value="削除">
+					&nbsp;&nbsp;&nbsp;&nbsp
+					<input type="submit" th:formaction="@{/member/list}" value="戻る">
+				</div>
+			</form>
+		</div>
+	</body>
+</html>
