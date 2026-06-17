@@ -1,5 +1,7 @@
 package com.example.springboot_comprehensive_exercise.controller;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -234,7 +236,7 @@ public class MemberController {
 		Position position = member.getPosition();
 		Place place = member.getPlace();
 		
-		if (position == null || place == null) {
+		if (Objects.isNull(position) || Objects.isNull(place)) {
 			//メンバー一覧へ
 			return "redirect:/member/list";
 		}
