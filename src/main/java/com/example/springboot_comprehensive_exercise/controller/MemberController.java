@@ -229,14 +229,15 @@ public class MemberController {
 	public String showDelete(@PathVariable String id, Model model) {
 		
 		//idからMemberを取得
-		Member member = memberRepository.findById(id).orElse(null);
-		
-	    if (member == null) {
-	        return "redirect:/member/list";
-	    }
-	    
+		//nullなら空のインスタンスを返す
+		Member member = memberRepository.findById(id).orElse(new Member());
 		Position position = member.getPosition();
 		Place place = member.getPlace();
+		
+		if (position == null || place == null) {
+			//メンバー一覧へ
+			return "redirect:/member/list";
+		}
 		
 		model.addAttribute("positionName", position.getPositionName());
 		model.addAttribute("placeName", place.getPlaceName());
@@ -255,14 +256,13 @@ public class MemberController {
 	public String detele(@PathVariable String id, Model model) {
 		
 		//idからMemberを取得
-		Member member = memberRepository.findById(id).orElse(null);
-		
-	    if (member == null) {
-	        return "redirect:/member/list";
-	    }
-	    
+		Member member = memberRepository.findById(id).orElse(new Member());
 		Position position = member.getPosition();
 		Place place = member.getPlace();
+		
+		if (position == null || place == null) {
+			return "redirect:/member/list";
+		}
 		
 		model.addAttribute("positionName", position.getPositionName());
 		model.addAttribute("placeName", place.getPlaceName());
