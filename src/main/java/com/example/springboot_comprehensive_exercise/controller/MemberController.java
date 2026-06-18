@@ -152,7 +152,12 @@ public class MemberController {
 	public String showUpdate(@PathVariable String id, Model model) {
 
 		//IDからMemberのインスタンスを取得
-		Member member = memberRepository.findById(id).orElse(null);
+		Member member = memberRepository.findById(id).orElse(new Member());
+
+		if (Objects.isNull(member.getMemberId())) {
+			return "redirect:/member/list";
+		}
+
 		//エンティティからフォームに変換
 		MemberForm form = MemberForm.fromEntity(member);
 
@@ -197,19 +202,18 @@ public class MemberController {
 	@PostMapping("/member/updateComp/{id}")
 	public String updateComp(
 			@PathVariable String id, @ModelAttribute MemberForm form, Model model) {
-		
+
 		//IDから役職と事業所のインスタンスを取得
 		Position position = memberService.getPosition(form.getPositionId());
 		Place place = memberService.getPlace(form.getPlaceId());
-		
+
 		//存在しないidであれば一覧画面へリダイレクト
 		if (Objects.isNull(position) || Objects.isNull(place)) {
 			return "redirect:/member/list";
 		}
-		
+
 		//更新処理
 		memberService.updateMember(id, form, position, place);
-		
 
 		//モデルに役職名と事業所名を追加
 		model.addAttribute("positionName", position.getPositionName());
@@ -217,7 +221,7 @@ public class MemberController {
 
 		//画面に更新内容を送る
 		model.addAttribute("member", form);
-		
+
 		return "member/updateComp";
 	}
 
@@ -229,25 +233,25 @@ public class MemberController {
 	 */
 	@PostMapping("/member/deleteConf/{id}")
 	public String showDelete(@PathVariable String id, Model model) {
-		
+
 		//idからMemberを取得
 		//nullなら空のインスタンスを返す
 		Member member = memberRepository.findById(id).orElse(new Member());
 		Position position = member.getPosition();
 		Place place = member.getPlace();
-		
+
 		if (Objects.isNull(position) || Objects.isNull(place)) {
 			//メンバー一覧へ
 			return "redirect:/member/list";
 		}
-		
+
 		model.addAttribute("positionName", position.getPositionName());
 		model.addAttribute("placeName", place.getPlaceName());
 		model.addAttribute("member", member);
 
 		return "member/deleteConf";
 	}
-	
+
 	/**
 	 * 削除完了画面の表示
 	 * @param id
@@ -256,24 +260,24 @@ public class MemberController {
 	 */
 	@PostMapping("/member/deleteComp/{id}")
 	public String detele(@PathVariable String id, Model model) {
-		
+
 		//idからMemberを取得
 		Member member = memberRepository.findById(id).orElse(new Member());
 		Position position = member.getPosition();
 		Place place = member.getPlace();
-		
+
 		if (Objects.isNull(position) || Objects.isNull(place)) {
 			//メンバー一覧へ
 			return "redirect:/member/list";
 		}
-		
+
 		model.addAttribute("positionName", position.getPositionName());
 		model.addAttribute("placeName", place.getPlaceName());
 		model.addAttribute("member", member);
-		
+
 		//削除処理
-	    memberRepository.deleteById(id);
-		
+		memberRepository.deleteById(id);
+
 		return "member/deleteComp";
 	}
 
@@ -286,7 +290,13 @@ public class MemberController {
 	@PostMapping("/member/detail/{id}")
 	public String detail(@PathVariable String id, Model model) {
 
-		Member member = memberRepository.findById(id).orElse(null);
+		//IDからMemberのインスタンスを取得
+		Member member = memberRepository.findById(id).orElse(new Member());
+
+		if (Objects.isNull(member.getMemberId())) {
+			return "redirect:/member/list";
+		}
+
 		model.addAttribute("member", member);
 
 		return "member/detail";
