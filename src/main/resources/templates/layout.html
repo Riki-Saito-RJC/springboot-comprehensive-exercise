@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<nav th:fragment="upsertMessage">
+			<div class="message error" onclick="this.classList.add('hidden');" th:if="${#fields.hasAnyErrors()}"
+				th:text="#{upsertError}"></div>
+		</nav>
+	</div>
+</body>
+</html>

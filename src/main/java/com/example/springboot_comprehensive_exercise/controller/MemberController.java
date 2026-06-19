@@ -3,6 +3,7 @@ package com.example.springboot_comprehensive_exercise.controller;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -96,6 +97,9 @@ public class MemberController {
 		
 		//入力値にエラーがあれば登録画面を再表示
 		if(result.hasErrors()) {
+			//モデルに役職と事業所のリストを追加
+			model.addAttribute("positions", positionRepository.findAll());
+			model.addAttribute("places", placeRepository.findAll());
 			return "member/insert";
 		}
 		
@@ -164,7 +168,7 @@ public class MemberController {
 	@RequestMapping("/member/list")
 	public String list(Model model) {
 
-		model.addAttribute("members", memberRepository.findAll());
+		model.addAttribute("members", memberRepository.findAll(Sort.by("memberId")));
 		return "member/list";
 	}
 

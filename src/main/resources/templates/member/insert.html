@@ -14,7 +14,8 @@
 			<div class="menu">
 				<h2>新規登録画面</h2>
 			</div>
-			<form th:action="@{/member/insertConf}" method="post" th:object="${member}">
+			<form th:action="@{/member/insertConf}" method="post" th:object="${member}" novalidate>
+				<div th:insert="~{layout :: upsertMessage}"></div>
 				<table class="ct">
 					<tr class="required">
 						<th>社員ID</th>

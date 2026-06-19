@@ -48,12 +48,17 @@ html, body {
 
 /* エラーメッセージははっきり目にするが派手さは抑える */
 .error {
-	text-align: center;
-	color: #b33a3a;
-	background-color: #fff5f5;
-	border: 1px solid #f2c6c6;
-	padding: 8px 12px;
-	border-radius: 4px;
+    text-align: center;
+    color: #b33a3a;
+    background-color: #fff5f5;
+    border: 1px solid #f2c6c6;
+    padding: 8px 12px;
+    border-radius: 4px;
+
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto 12px auto;
+    box-sizing: border-box;
 }
 
 /* --- テーブルを見やすく（読みやすい余白・ヘッダ強調・ゼブラ） --- */
