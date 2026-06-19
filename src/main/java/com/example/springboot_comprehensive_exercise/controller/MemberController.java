@@ -5,6 +5,8 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import com.example.springboot_comprehensive_exercise.repository.MemberRepository
 import com.example.springboot_comprehensive_exercise.repository.PlaceRepository;
 import com.example.springboot_comprehensive_exercise.repository.PositionRepository;
 import com.example.springboot_comprehensive_exercise.service.MemberService;
+import com.example.springboot_comprehensive_exercise.validator.MemberValidator;
 
 @Controller
 public class MemberController {
@@ -35,6 +38,25 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 
+	private MemberValidator memberValidator;
+	
+//	/**
+//	 * メソッド実行前処理用メソッド
+//	 * Modelにキー名「user」で登録されたオブジェクトが存在する場合に実行される
+//	 * 
+//	 * @param binder
+//	 */
+//	@InitBinder("member")
+//	public void initVinder(WebDataBinder binder) {
+//		//フォームの値が自動的に MemberForm に入るとき（データバインド）、
+//		//独自のバリデーターが実施される
+//		binder.addValidators(this.memberValidator);
+//	}
+	
+	/**
+	 * ホーム画面の表示
+	 * @return
+	 */
 	@GetMapping("/")
 	public String index() {
 		return "index";
@@ -64,33 +86,19 @@ public class MemberController {
 	}
 
 	/**
-	 * 新規登録画面の表示（戻る）
-	 * @param form フォーム
-	 * @param model モデル
-	 * @return 新規登録画面
-	 */
-	//リクエストパラメーターに"back"が含まれている場合にこのメソッドが呼び出される
-	@PostMapping(value = "/member/insert", params = "back")
-	public String back(@ModelAttribute("member") MemberForm form, Model model) {
-
-		//モデルにMemberFormクラスのインスタンスを追加
-		model.addAttribute("member", form);
-
-		//モデルに役職と事業所のリストを追加
-		model.addAttribute("positions", positionRepository.findAll());
-		model.addAttribute("places", placeRepository.findAll());
-
-		return "member/insert";
-	}
-
-	/**
 	 * 新規登録確認画面の表示
 	 * @param model モデル
 	 * @return 新規登録確認画面
 	 */
 	@PostMapping("/member/insertConf")
-	public String insertConf(@ModelAttribute MemberForm form, Model model) {
-
+	public String insertConf(@Validated @ModelAttribute("member") MemberForm form,
+			BindingResult result, Model model) {
+		
+		//入力値にエラーがあれば登録画面を再表示
+		if(result.hasErrors()) {
+			return "member/insert";
+		}
+		
 		//IDから役職と事業所のインスタンスを取得
 		Position position = memberService.getPosition(form.getPositionId());
 		Place place = memberService.getPlace(form.getPlaceId());
@@ -99,10 +107,28 @@ public class MemberController {
 		model.addAttribute("positionName", position.getPositionName());
 		model.addAttribute("placeName", place.getPlaceName());
 
-		//モデルにMemberFormクラスのインスタンスを追加
-		model.addAttribute("member", form);
 
 		return "member/insertConf";
+	}
+	
+	/**
+	 * 新規登録画面の表示（戻る）
+	 * @param form フォーム
+	 * @param model モデル
+	 * @return 新規登録画面
+	 */
+	//リクエストパラメーターに"back"が含まれている場合にこのメソッドが呼び出される
+	@PostMapping(value = "/member/insert", params = "back")
+	public String back(@ModelAttribute("member") MemberForm form, Model model) {
+		
+		//モデルにMemberFormクラスのインスタンスを追加
+		model.addAttribute("member", form);
+		
+		//モデルに役職と事業所のリストを追加
+		model.addAttribute("positions", positionRepository.findAll());
+		model.addAttribute("places", placeRepository.findAll());
+		
+		return "member/insert";
 	}
 
 	/**
