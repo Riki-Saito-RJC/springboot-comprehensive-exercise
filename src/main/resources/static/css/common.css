@@ -1,56 +1,178 @@
-@CHARSET "UTF-8";
+
+@charset "UTF-8";
+
+/* --- 全体の基礎設定（落ち着いた業務向け） --- */
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+	background-color: #f4f7f9; /* 軽めのグレーブルー */
+	color: #2b3a3f; /* 暗めのテキスト色 */
+	-webkit-font-smoothing: antialiased;
+}
 
 #wapper {
+	max-width: 980px;
+	margin: 28px auto;
+	padding: 18px 22px;
+	background-color: #ffffff;
+	border: 1px solid #e1e8ec;
+	border-radius: 6px;
+	box-shadow: 0 1px 4px rgba(43,58,63,0.06);
 }
 
+/* --- メニュー（目立たせつつ落ち着いた色合い） --- */
 .menu {
 	text-align: center;
-	padding: 10px;
-	
+	padding: 12px 14px;
+	margin-bottom: 12px;
 }
 
+.menu a {
+	display: inline-block;
+	color: #ffffff;
+	background-color: #34515f; /* 落ち着いたダークブルー */
+	padding: 8px 14px;
+	border-radius: 4px;
+	text-decoration: none;
+	font-weight: 600;
+	box-shadow: 0 1px 0 rgba(0,0,0,0.06) inset;
+}
+
+.menu h2 {
+	margin: 6px 0;
+	color: #233238;
+	font-size: 1.2rem;
+}
+
+/* エラーメッセージははっきり目にするが派手さは抑える */
 .error {
 	text-align: center;
-	color: red;
+	color: #b33a3a;
+	background-color: #fff5f5;
+	border: 1px solid #f2c6c6;
+	padding: 8px 12px;
+	border-radius: 4px;
 }
 
+/* --- テーブルを見やすく（読みやすい余白・ヘッダ強調・ゼブラ） --- */
 table {
+	width: 100%;
+	max-width: 920px;
 	margin-left: auto;
 	margin-right: auto;
 	border-collapse: collapse;
-	border:1px solid #333;
+	background-clip: padding-box;
+}
+
+table.ct, table.list {
+	box-shadow: 0 1px 2px rgba(43,58,63,0.04);
 }
 
 table th {
-	width: 150px;
-	background-color: orange;
-	color: white;;
-	border-collapse: collapse;
-	border:1px solid #333;
-	padding: 5px;
+	text-align: left;
+	vertical-align: middle;
+	padding: 10px 12px;
+	background-color: #2f4f58; /* 落ち着いたヘッダ色 */
+	color: #ffffff;
+	font-weight: 600;
+	border: 1px solid #e6edf0;
 }
 
 table td {
-	width: 200px;
-	border-collapse: collapse;
-	border:1px solid #333;
-	padding: 5px;
+	padding: 10px 12px;
+	border: 1px solid #eef3f5;
+	color: #2b3a3f;
+	vertical-align: middle;
+}
+
+/* ゼブラストライプ：視線の追いやすさ向上 */
+table tr:nth-child(even) td {
+	background-color: #fbfdfe;
+}
+
+table tr:hover td {
+	background-color: #f1f7f9;
+}
+
+/* 列幅の調整（指定があればそちらを優先） */
+table th[width], table td[width] { /* 保険的指定 */
+	white-space: nowrap;
+}
+
+/* 別スタイルのテーブル（一覧など） */
+table.list th, table.list td {
 	text-align: center;
+	padding: 8px 10px;
 }
 
-table.list th {
-	width: 100px;
-	border-collapse: collapse;
-	border:1px solid #333;
-	padding: 5px;
-}
-
+/* メンバー一覧などのセル内で改行させない（省スペース時は省略表示） */
 table.list td {
-	width: 100px;
-	border-collapse: collapse;
-	border:1px solid #333;
-	padding: 5px;
-	text-align: center;
+	white-space: nowrap; /* 改行を防ぐ */
+	overflow: hidden;    /* はみ出しを隠す */
+	text-overflow: ellipsis; /* 省略記号を表示 */
+	max-width: 220px;    /* 必要に応じて調整してください */
 }
 
+/* --- ボタンの見た目を統一 --- */
+input[type="submit"], input[type="button"], button {
+	appearance: none;
+	-webkit-appearance: none;
+	border: none;
+	display: inline-block;
+	padding: 8px 14px;
+	border-radius: 6px;
+	background: linear-gradient(180deg, #4a6b77 0%, #34515f 100%);
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 2px 0 rgba(0,0,0,0.06);
+	transition: background-color 0.12s ease, transform 0.08s ease;
+}
 
+input[type="submit"]:hover, input[type="button"]:hover, button:hover {
+	background: linear-gradient(180deg, #5a7f8b 0%, #3a6570 100%);
+	transform: translateY(-1px);
+}
+
+input[type="submit"]:active, input[type="button"]:active, button:active {
+	transform: translateY(0);
+	box-shadow: 0 1px 0 rgba(0,0,0,0.06) inset;
+}
+
+/* 補助ボタン（戻るなど）は淡い枠線ボタン */
+.btn-ghost, input[formaction], input[type="button"].ghost {
+	background: transparent;
+	color: #34515f;
+	border: 1px solid #d3e0e4;
+	box-shadow: none;
+}
+
+/* フォーム要素の基礎調整 */
+input[type="text"], select, textarea {
+	padding: 8px 10px;
+	border: 1px solid #dfe9ec;
+	border-radius: 4px;
+	background-color: #ffffff;
+	color: #233238;
+}
+
+/* 小画面対応 */
+@media (max-width: 640px) {
+	#wapper {
+		margin: 14px;
+		padding: 12px;
+	}
+	table th, table td { padding: 8px 6px; }
+	.menu a { padding: 7px 10px; }
+}
+
+.required>th {
+	font-weight: bold;
+}
+
+.required>th:after {
+	content: ' *';
+	color: #C3232D;
+}
