@@ -53,7 +53,14 @@
 						<td th:text="${placeName}"></td>
 					</tr>
 				</table>
+				<div class="menu">
+					<!-- 追加入力ボタン（新規登録画面へ）と一覧へ戻るボタン -->
+					<input type="submit" th:formaction="@{/member/insert}" value="さらに登録">
+					<input type="submit"  th:formaction="@{/member/list}" value="メンバ一覧へ">
+				</div>
 			</form>
+
+
 		</div>
 	</body>
 </html>
