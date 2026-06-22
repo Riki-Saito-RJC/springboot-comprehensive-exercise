@@ -54,12 +54,12 @@
 					</tr>
 					<tr>
 						<th>役職</th>
-						<td th:text="${positionName}"></td>
+						<td th:text="*{positionName}"></td>
 						<input type="hidden" th:field="*{positionId}">
 					</tr>
 					<tr>
 						<th>事業所</th>
-						<td th:text="${placeName}"></td>
+						<td th:text="*{placeName}"></td>
 						<input type="hidden" th:field="*{placeId}">
 					</tr>
 				</table>

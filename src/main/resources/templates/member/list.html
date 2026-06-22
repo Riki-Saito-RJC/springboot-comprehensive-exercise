@@ -1,89 +1,61 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<link rel="stylesheet" type="text/css" href="/css/common.css">
-	<title>list</title>
-</head>
-
-<body>
-	<div id="wapper">
-		<div class="menu">
-			<a href="/">メニュー</a><br>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" type="text/css" href="/css/common.css">
+		<title>list</title>
+	</head>
+	
+	<body>
+		<div id="wapper">
+			<div class="menu">
+				<a href="/">メニュー</a><br>
+			</div>
+			<div class="menu">
+				<h2>メンバ一覧画面</h2>
+			</div>
+			<table class="list" >
+				<tr>
+					<th>社員ID</th>
+					<th>氏名</th>
+					<th>年齢</th>
+					<th>性別</th>
+					<th>住所</th>
+					<th>電話番号</th>
+					<th>メールアドレス</th>
+					<th>役職</th>
+					<th>事業所</th>
+					<th>詳細</th>
+					<th>更新</th>
+					<th>削除</th>
+				</tr>
+				<tr th:each="member : ${members}" th:object="${member}">
+					<td th:text="*{memberId}"></td>
+					<td th:text="*{memberName}"></td>
+					<td th:text="*{age}"></td>
+					<td th:text="*{sexFlg == 0 ? '男' : '女'}"></td>
+					<td th:text="*{address}"></td>
+					<td th:text="*{telephone}"></td>
+					<td th:text="*{mail}"></td>
+					<td th:text="*{position != null ? position.positionName : ''}"></td>	
+					<td th:text="*{place != null ? place.placeName : ''}"></td>	
+					<td>
+						<form th:action="@{/member/detail/{id}(id=*{memberId})}" method="post">
+						    <input type="submit" value="詳細">
+						</form>
+					</td>
+					<td>
+						<form th:action="@{/member/update/{id}(id=*{memberId})}" method="post">
+							<input type="submit" value="更新">
+						</form>
+					</td>
+					<td>
+						<form th:action="@{/member/deleteConf/{id}(id=*{memberId})}" method="post">
+							<input type="submit" value="削除">
+						</form>
+					</td>
+				</tr>
+			</table>
 		</div>
-		<div class="menu">
-			<h2>メンバ一覧画面</h2>
-		</div>
-		<table class="list" >
-			<tr>
-				<th>社員ID</th>
-				<th>氏名</th>
-				<th>年齢</th>
-				<th>性別</th>
-				<th>住所</th>
-				<th>電話番号</th>
-				<th>メールアドレス</th>
-				<th>役職</th>
-				<th>事業所</th>
-				<th>詳細</th>
-				<th>更新</th>
-				<th>削除</th>
-			</tr>
-<!--			<tr th:object="${member}">-->
-<!--				<td>ME00000001</td>-->
-<!--				<td>社員 A</td>-->
-<!--				<td>25</td>-->
-<!--				<td>男</td>-->
-<!--				<td>東京都</td>-->
-<!--				<td>00-0000-0000</td>-->
-<!--				<td>xxx@xxx.xx</td>-->
-<!--				<td>一般社員</td>-->
-<!--				<td> 東京本社</td>-->
-<!--				<td>-->
-<!--					<form th:action="@{/member/detail/{id}(id=*{memberId})}" method="post">-->
-<!--					    <input type="submit" value="詳細">-->
-<!--					</form>-->
-<!--				</td>-->
-<!--				<td>-->
-<!--					<form action="./update" method="post">-->
-<!--						<input type="submit" value="更新">-->
-<!--					</form>-->
-<!--				</td>-->
-<!--				<td>-->
-<!--					<form action="./delete" method="post">-->
-<!--						<input type="submit" value="削除">-->
-<!--					</form>-->
-<!--				</td>-->
-<!--			</tr>-->
-			<tr th:each="member : ${members}" th:object="${member}">
-				<td th:text="*{memberId}"></td>
-				<td th:text="*{memberName}"></td>
-				<td th:text="*{age}"></td>
-				<td th:text="*{sexFlg == 0 ? '男' : '女'}"></td>
-				<td th:text="*{address}"></td>
-				<td th:text="*{telephone}"></td>
-				<td th:text="*{mail}"></td>
-				<td th:text="*{position != null ? position.positionName : ''}"></td>	
-				<td th:text="*{place != null ? place.placeName : ''}"></td>	
-				<td>
-					<form th:action="@{/member/detail/{id}(id=*{memberId})}" method="post">
-					    <input type="submit" value="詳細">
-					</form>
-				</td>
-				<td>
-					<form th:action="@{/member/update/{id}(id=*{memberId})}" method="post">
-						<input type="submit" value="更新">
-					</form>
-				</td>
-				<td>
-					<form th:action="@{/member/deleteConf/{id}(id=*{memberId})}" method="post">
-						<input type="submit" value="削除">
-					</form>
-				</td>
-			</tr>
-		</table>
-	</div>
-</body>
-
+	</body>
 </html>

@@ -1,5 +1,10 @@
 package com.example.springboot_comprehensive_exercise.form;
 
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import com.example.springboot_comprehensive_exercise.entitiy.Member;
 import com.example.springboot_comprehensive_exercise.entitiy.Place;
 import com.example.springboot_comprehensive_exercise.entitiy.Position;
@@ -15,31 +20,48 @@ import lombok.Data;
 public class MemberForm {
 
 	/** メンバーID */
+	@NotBlank
 	private String memberId;
+	
 
 	/** メンバー名 */
+	@NotBlank
 	private String memberName;
 
 	/** 年齢 */
+	@NotNull
+	@Min(0)
 	private Integer age;
 
 	/** 性別フラグ */
+	@NotNull
 	private Integer sexFlg;
 
 	/** 住所 */
+	@NotBlank
 	private String address;
 
 	/** 電話番号 */
+	@NotBlank
 	private String telephone;
 
 	/** メールアドレス */
+	@NotBlank
 	private String mail;
 
 	/** 役職ID */
+	@NotBlank
 	private String positionId;
+	
+	/** 役職名 */
+	private String positionName;
 
 	/** 事業所ID */
+	@NotBlank
 	private String placeId;
+	
+	/** 事業所名 */
+	private String placeName;
 
 	/**
 	 * フォームの入力値をMemberエンティティに変換するメソッド

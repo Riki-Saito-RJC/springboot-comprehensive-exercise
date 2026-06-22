@@ -46,14 +46,21 @@
 					</tr>
 					<tr>
 						<th>役職</th>
-						<td th:text="${positionName}"></td>
+						<td th:text="*{positionName}"></td>
 					</tr>
 					<tr>
 						<th>事業所</th>
-						<td th:text="${placeName}"></td>
+						<td th:text="*{placeName}"></td>
 					</tr>
 				</table>
+				<div class="menu">
+					<!-- 追加入力ボタン（新規登録画面へ）と一覧へ戻るボタン -->
+					<input type="submit" th:formaction="@{/member/insert}" value="さらに登録">
+					<input type="submit"  th:formaction="@{/member/list}" value="メンバ一覧へ">
+				</div>
 			</form>
+
+
 		</div>
 	</body>
 </html>

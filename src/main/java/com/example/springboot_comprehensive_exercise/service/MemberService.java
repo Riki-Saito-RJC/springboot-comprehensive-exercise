@@ -1,8 +1,11 @@
 package com.example.springboot_comprehensive_exercise.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,24 +29,51 @@ public class MemberService {
 	private PlaceRepository placeRepository;
 
 	/**
+	 * 全メンバーのリストを取得するメソッド
+	 * @return 全メンバーのリスト
+	 */
+	public List<Member> findAll() {
+		return memberRepository.findAll(Sort.by("memberId"));
+	}
+
+	/**
+	 * IDで指定したメンバーを取得するメソッド
+	 * @param メンバーID
+	 * @return Optional型メンバークラス
+	 */
+	public Optional<Member> findById(String id) {
+		return memberRepository.findById(id);
+	}
+
+	/**
+	 * IDで指定したメンバーを削除するメソッド
+	 * @param メンバーID
+	 */
+	public void deleteById(String id) {
+		memberRepository.deleteById(id);
+	}
+
+	/**
 	 * 
 	 * @param form
 	 * @return Memberのインスタンス
 	 */
 	public Member createMember(MemberForm form) {
 
-		//IDから役職と事業所のインスタンスを取得
 		Position position = getPosition(form.getPositionId());
 		Place place = getPlace(form.getPlaceId());
 
+		form.setPositionName(position.getPositionName());
+		form.setPlaceName(place.getPlaceName());
+
 		//MemberFormクラスのインスタンスをMemberエンティティに変換
 		Member member = form.toEntity(position, place);
-		
+
 		//登録日時、更新日時、削除フラグを設定
 		member.setRegistDate(LocalDateTime.now());
 		member.setUpdateDate(LocalDateTime.now());
 		member.setDeleteFlg(0);
-		
+
 		//Memberエンティティを保存
 		return memberRepository.save(member);
 	}
@@ -66,21 +96,23 @@ public class MemberService {
 	public Place getPlace(String placeId) {
 		return placeRepository.findById(placeId).orElse(null);
 	}
-	
+
 	/**
 	 * Memberのプロパティを更新するメソッド
 	 * @param id
 	 * @param form
 	 * @return
 	 */
-	public Member updateMember(String id, MemberForm form, Position position, Place place) {
-		
+	public Member updateMember(MemberForm form, Position position, Place place) {
+
+		String id = form.getMemberId();
+
 		//更新前の情報を持ったMemberを用意
 		Member member = memberRepository.findById(id).orElse(null);
 
 		//フォームに入力されたプロパティのみ更新
 		member.update(form, position, place);
-		
+
 		//DBに保存
 		return memberRepository.save(member);
 	}
