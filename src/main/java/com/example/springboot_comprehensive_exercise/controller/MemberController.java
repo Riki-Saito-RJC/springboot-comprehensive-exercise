@@ -61,19 +61,15 @@ public class MemberController {
 	 * @return 新規登録画面
 	 */
 	@GetMapping("/member/insert")
-	public String showInsert(Model model) {
+	public String showInsert(@ModelAttribute("member") MemberForm form, Model model) {
 
 		//初期値を設定
-		MemberForm form = new MemberForm();
 		form.setMemberId("ME000000__");
 		form.setPositionId("PO00000007");
 		form.setPlaceId("PL00000001");
 
-		//モデルにMemberFormクラスのインスタンスを追加
-		model.addAttribute("member", form);
 		//モデルに役職と事業所のリストを追加
-		model.addAttribute("positions", positionService.findAll());
-		model.addAttribute("places", placeService.findAll());
+		setMasterData(model);
 
 		return "member/insert";
 	}
@@ -86,27 +82,20 @@ public class MemberController {
 	@PostMapping("/member/insertConf")
 	public String insertConf(@Validated @ModelAttribute("member") MemberForm form,
 			BindingResult result, Model model) {
-		
+
 		//入力値にエラーがあれば登録画面を再表示
-		if(result.hasErrors()) {
+		if (result.hasErrors()) {
 			//モデルに役職と事業所のリストを追加
-			model.addAttribute("positions", positionService.findAll());
-			model.addAttribute("places", placeService.findAll());
+			setMasterData(model);
 			return "member/insert";
 		}
-		
-		//IDから役職と事業所のインスタンスを取得
-		Position position = memberService.getPosition(form.getPositionId());
-		Place place = memberService.getPlace(form.getPlaceId());
 
-		//モデルに役職名と事業所名を追加
-		model.addAttribute("positionName", position.getPositionName());
-		model.addAttribute("placeName", place.getPlaceName());
-
+		// formからModelに役職と事業所の表示名をセット
+		setDisplayNames(form);
 
 		return "member/insertConf";
 	}
-	
+
 	/**
 	 * 新規登録画面の表示（戻る）
 	 * @param form フォーム
@@ -116,14 +105,10 @@ public class MemberController {
 	//リクエストパラメーターに"back"が含まれている場合にこのメソッドが呼び出される
 	@PostMapping(value = "/member/insert", params = "back")
 	public String back(@ModelAttribute("member") MemberForm form, Model model) {
-		
-		//モデルにMemberFormクラスのインスタンスを追加
-		model.addAttribute("member", form);
-		
+
 		//モデルに役職と事業所のリストを追加
-		model.addAttribute("positions", positionService.findAll());
-		model.addAttribute("places", placeService.findAll());
-		
+		setMasterData(model);
+
 		return "member/insert";
 	}
 
@@ -137,17 +122,6 @@ public class MemberController {
 
 		//DBに保存
 		memberService.createMember(form);
-
-		//IDから役職と事業所のインスタンスを取得
-		Position position = memberService.getPosition(form.getPositionId());
-		Place place = memberService.getPlace(form.getPlaceId());
-
-		//モデルに役職名と事業所名を追加
-		model.addAttribute("positionName", position.getPositionName());
-		model.addAttribute("placeName", place.getPlaceName());
-
-		//モデルにMemberFormクラスのインスタンスを追加
-		model.addAttribute("member", form);
 
 		return "member/insertComp";
 	}
@@ -171,7 +145,8 @@ public class MemberController {
 	 * @return
 	 */
 	@PostMapping("/member/update/{id}")
-	public String showUpdate(@PathVariable String id, Model model) {
+	public String showUpdate(@PathVariable String id,
+			@ModelAttribute("member") MemberForm form, Model model) {
 
 		//IDからMemberのインスタンスを取得
 		Member member = memberService.findById(id).orElse(new Member());
@@ -181,13 +156,11 @@ public class MemberController {
 		}
 
 		//エンティティからフォームに変換
-		MemberForm form = MemberForm.fromEntity(member);
-
+		form = MemberForm.fromEntity(member);
 		//モデルにフォームを追加
 		model.addAttribute("member", form);
 		//モデルに役職と事業所のリストを追加
-		model.addAttribute("positions", positionService.findAll());
-		model.addAttribute("places", placeService.findAll());
+		setMasterData(model);
 
 		return "member/update";
 	}
@@ -198,19 +171,11 @@ public class MemberController {
 	 * @param model
 	 * @return
 	 */
-	@PostMapping("/member/updateConf/{id}")
-	public String updateConf(@PathVariable String id, MemberForm form, Model model) {
+	@PostMapping("/member/updateConf")
+	public String updateConf(@ModelAttribute("member") MemberForm form, Model model) {
 
-		//IDから役職と事業所のインスタンスを取得
-		Position position = memberService.getPosition(form.getPositionId());
-		Place place = memberService.getPlace(form.getPlaceId());
-
-		//モデルに役職名と事業所名を追加
-		model.addAttribute("positionName", position.getPositionName());
-		model.addAttribute("placeName", place.getPlaceName());
-
-		//画面に更新内容を送る
-		model.addAttribute("member", form);
+		// Modelに役職と事業所の表示名をセット
+		setDisplayNames(form);
 
 		return "member/updateConf";
 	}
@@ -221,11 +186,10 @@ public class MemberController {
 	 * @param model
 	 * @return
 	 */
-	@PostMapping("/member/updateComp/{id}")
-	public String updateComp(
-			@PathVariable String id, @ModelAttribute MemberForm form, Model model) {
+	@PostMapping("/member/updateComp")
+	public String updateComp(@ModelAttribute("member") MemberForm form, Model model) {
 
-		//IDから役職と事業所のインスタンスを取得
+		///formから役職と事業所を取得
 		Position position = memberService.getPosition(form.getPositionId());
 		Place place = memberService.getPlace(form.getPlaceId());
 
@@ -235,14 +199,10 @@ public class MemberController {
 		}
 
 		//更新処理
-		memberService.updateMember(id, form, position, place);
+		memberService.updateMember(form, position, place);
 
-		//モデルに役職名と事業所名を追加
-		model.addAttribute("positionName", position.getPositionName());
-		model.addAttribute("placeName", place.getPlaceName());
-
-		//画面に更新内容を送る
-		model.addAttribute("member", form);
+		// Modelに役職と事業所の表示名をセット
+		setDisplayNames(form);
 
 		return "member/updateComp";
 	}
@@ -254,9 +214,8 @@ public class MemberController {
 	 * @return
 	 */
 	@PostMapping("/member/deleteConf/{id}")
-	public String showDelete(@PathVariable String id, Model model) {
+	public String showDelete(@PathVariable String id,MemberForm form, Model model) {
 
-		//idからMemberを取得
 		//nullなら空のインスタンスを返す
 		Member member = memberService.findById(id).orElse(new Member());
 		Position position = member.getPosition();
@@ -267,12 +226,16 @@ public class MemberController {
 			return "redirect:/member/list";
 		}
 
-		model.addAttribute("positionName", position.getPositionName());
-		model.addAttribute("placeName", place.getPlaceName());
-		model.addAttribute("member", member);
-
+		//EntityをFormに変換
+		MemberForm memberForm = MemberForm.fromEntity(member);
+		//Modelに役職と事業所の表示名をセット
+		setDisplayNames(memberForm);
+		//ModelにFormをセット
+		model.addAttribute("member", memberForm);
+		
 		return "member/deleteConf";
 	}
+	
 
 	/**
 	 * 削除完了画面の表示
@@ -280,9 +243,11 @@ public class MemberController {
 	 * @param model
 	 * @return
 	 */
-	@PostMapping("/member/deleteComp/{id}")
-	public String detele(@PathVariable String id, Model model) {
-
+	@PostMapping("/member/deleteComp")
+	public String detele(MemberForm form, Model model) {
+		
+		String id = form.getMemberId();
+		
 		//idからMemberを取得
 		Member member = memberService.findById(id).orElse(new Member());
 		Position position = member.getPosition();
@@ -293,9 +258,12 @@ public class MemberController {
 			return "redirect:/member/list";
 		}
 
-		model.addAttribute("positionName", position.getPositionName());
-		model.addAttribute("placeName", place.getPlaceName());
-		model.addAttribute("member", member);
+		//EntityをFormに変換
+		MemberForm memberForm = MemberForm.fromEntity(member);
+		// Modelに役職と事業所の表示名をセット
+		setDisplayNames(memberForm);
+		//modelにセット
+		model.addAttribute("member", memberForm);
 
 		//削除処理
 		memberService.deleteById(id);
@@ -310,7 +278,7 @@ public class MemberController {
 	 * @return
 	 */
 	@PostMapping("/member/detail/{id}")
-	public String detail(@PathVariable String id, Model model) {
+	public String showDetail(@PathVariable String id, Model model) {
 
 		//IDからMemberのインスタンスを取得
 		Member member = memberService.findById(id).orElse(new Member());
@@ -322,6 +290,28 @@ public class MemberController {
 		model.addAttribute("member", member);
 
 		return "member/detail";
+	}
+
+	/**
+	 * Modelに全ての役職と事業所をセットするメソッド
+	 * @param model
+	 */
+	private void setMasterData(Model model) {
+		model.addAttribute("positions", positionService.findAll());
+		model.addAttribute("places", placeService.findAll());
+	}
+
+	/**
+	 * formに役職と事業所の表示名をセットするメソッド
+	 * @param form
+	 * @param model
+	 */
+	private void setDisplayNames(MemberForm form) {
+		Position position = memberService.getPosition(form.getPositionId());
+		Place place = memberService.getPlace(form.getPlaceId());
+
+		form.setPositionName(position.getPositionName());
+		form.setPlaceName(place.getPlaceName());
 	}
 
 }

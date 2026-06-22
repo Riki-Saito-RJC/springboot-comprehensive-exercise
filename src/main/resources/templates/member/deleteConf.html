@@ -15,7 +15,7 @@
 				<h2>削除確認画面</h2>
 				<p>以下のデータを削除します&nbsp;よろしいですか</p>
 			</div>
-			<form th:object="${member}" th:action="@{/member/deleteComp/{id}(id=*{memberId})}" method="post">
+			<form th:object="${member}" th:action="@{/member/deleteComp}" method="post">
 				<table class="ct">
 					<tr>
 						<th>社員ID</th>
@@ -54,13 +54,13 @@
 					</tr>
 					<tr>
 						<th>役職</th>
-						<td th:text="${positionName}"></td>
-						<input type="hidden" th:field="*{position}">
+						<td th:text="*{positionName}"></td>
+						<input type="hidden" th:field="*{positionId}">
 					</tr>
 					<tr>
 						<th>事業所</th>
-						<td th:text="${placeName}"></td>
-						<input type="hidden" th:field="*{place}">
+						<td th:text="*{placeName}"></td>
+						<input type="hidden" th:field="*{placeId}">
 					</tr>
 				</table>
 				<div class="menu">

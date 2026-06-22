@@ -9,14 +9,14 @@
 	<body>
 		<div id="wapper">
 			<div class="menu">
-				<a href="../">メニュー</a><br>
-				<a href="./list.html">メンバ一覧</a><br>
+				<a href="/">メニュー</a><br>
+				<a href="/member/list">メンバ一覧</a><br>
 			</div>
 			<div class="menu">
 				<h2>更新画面</h2>
 				<p>以下のデータの更新を行います</p>
 			</div>
-			<form th:action="@{/member/updateConf/{id}(id=*{memberId})}" method="post" th:object="${member}">
+			<form th:action="@{/member/updateConf}" method="post" th:object="${member}">
 				<table class="ct">
 					<tr>
 						<th>&nbsp;</th>

@@ -22,6 +22,7 @@ public class MemberForm {
 	/** メンバーID */
 	@NotBlank
 	private String memberId;
+	
 
 	/** メンバー名 */
 	@NotBlank
@@ -51,10 +52,16 @@ public class MemberForm {
 	/** 役職ID */
 	@NotBlank
 	private String positionId;
+	
+	/** 役職名 */
+	private String positionName;
 
 	/** 事業所ID */
 	@NotBlank
 	private String placeId;
+	
+	/** 事業所名 */
+	private String placeName;
 
 	/**
 	 * フォームの入力値をMemberエンティティに変換するメソッド
