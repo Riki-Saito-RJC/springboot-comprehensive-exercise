@@ -1,8 +1,11 @@
 package com.example.springboot_comprehensive_exercise.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,30 @@ public class MemberService {
 	@Autowired
 	private PlaceRepository placeRepository;
 
+	/**
+	 * 全メンバーのリストを取得するメソッド
+	 * @return 全メンバーのリスト
+	 */
+	public List<Member> findAll() {
+		return memberRepository.findAll(Sort.by("memberId"));
+	}
+	
+	/**
+	 * IDで指定したメンバーを取得するメソッド
+	 * @param メンバーID
+	 * @return Optional型メンバークラス
+	 */
+	public Optional<Member> findById(String id) {
+		return memberRepository.findById(id);
+	}
+	
+	/**
+	 * IDで指定したメンバーを削除するメソッド
+	 * @param メンバーID
+	 */
+	public void deleteById(String id) {
+		memberRepository.deleteById(id);
+	}
 	/**
 	 * 
 	 * @param form

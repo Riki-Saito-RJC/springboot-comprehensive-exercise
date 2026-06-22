@@ -3,7 +3,6 @@ package com.example.springboot_comprehensive_exercise.controller;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,28 +17,21 @@ import com.example.springboot_comprehensive_exercise.entitiy.Member;
 import com.example.springboot_comprehensive_exercise.entitiy.Place;
 import com.example.springboot_comprehensive_exercise.entitiy.Position;
 import com.example.springboot_comprehensive_exercise.form.MemberForm;
-import com.example.springboot_comprehensive_exercise.repository.MemberRepository;
-import com.example.springboot_comprehensive_exercise.repository.PlaceRepository;
-import com.example.springboot_comprehensive_exercise.repository.PositionRepository;
 import com.example.springboot_comprehensive_exercise.service.MemberService;
-import com.example.springboot_comprehensive_exercise.validator.MemberValidator;
+import com.example.springboot_comprehensive_exercise.service.PlaceService;
+import com.example.springboot_comprehensive_exercise.service.PositionService;
 
 @Controller
 public class MemberController {
 
 	@Autowired
-	private MemberRepository memberRepository;
+	private PositionService positionService;
 
 	@Autowired
-	private PositionRepository positionRepository;
-
-	@Autowired
-	private PlaceRepository placeRepository;
+	private PlaceService placeService;
 
 	@Autowired
 	private MemberService memberService;
-
-	private MemberValidator memberValidator;
 	
 //	/**
 //	 * メソッド実行前処理用メソッド
@@ -80,8 +72,8 @@ public class MemberController {
 		//モデルにMemberFormクラスのインスタンスを追加
 		model.addAttribute("member", form);
 		//モデルに役職と事業所のリストを追加
-		model.addAttribute("positions", positionRepository.findAll());
-		model.addAttribute("places", placeRepository.findAll());
+		model.addAttribute("positions", positionService.findAll());
+		model.addAttribute("places", placeService.findAll());
 
 		return "member/insert";
 	}
@@ -98,8 +90,8 @@ public class MemberController {
 		//入力値にエラーがあれば登録画面を再表示
 		if(result.hasErrors()) {
 			//モデルに役職と事業所のリストを追加
-			model.addAttribute("positions", positionRepository.findAll());
-			model.addAttribute("places", placeRepository.findAll());
+			model.addAttribute("positions", positionService.findAll());
+			model.addAttribute("places", placeService.findAll());
 			return "member/insert";
 		}
 		
@@ -129,8 +121,8 @@ public class MemberController {
 		model.addAttribute("member", form);
 		
 		//モデルに役職と事業所のリストを追加
-		model.addAttribute("positions", positionRepository.findAll());
-		model.addAttribute("places", placeRepository.findAll());
+		model.addAttribute("positions", positionService.findAll());
+		model.addAttribute("places", placeService.findAll());
 		
 		return "member/insert";
 	}
@@ -168,7 +160,7 @@ public class MemberController {
 	@RequestMapping("/member/list")
 	public String list(Model model) {
 
-		model.addAttribute("members", memberRepository.findAll(Sort.by("memberId")));
+		model.addAttribute("members", memberService.findAll());
 		return "member/list";
 	}
 
@@ -182,7 +174,7 @@ public class MemberController {
 	public String showUpdate(@PathVariable String id, Model model) {
 
 		//IDからMemberのインスタンスを取得
-		Member member = memberRepository.findById(id).orElse(new Member());
+		Member member = memberService.findById(id).orElse(new Member());
 
 		if (Objects.isNull(member.getMemberId())) {
 			return "redirect:/member/list";
@@ -194,8 +186,8 @@ public class MemberController {
 		//モデルにフォームを追加
 		model.addAttribute("member", form);
 		//モデルに役職と事業所のリストを追加
-		model.addAttribute("positions", positionRepository.findAll());
-		model.addAttribute("places", placeRepository.findAll());
+		model.addAttribute("positions", positionService.findAll());
+		model.addAttribute("places", placeService.findAll());
 
 		return "member/update";
 	}
@@ -266,7 +258,7 @@ public class MemberController {
 
 		//idからMemberを取得
 		//nullなら空のインスタンスを返す
-		Member member = memberRepository.findById(id).orElse(new Member());
+		Member member = memberService.findById(id).orElse(new Member());
 		Position position = member.getPosition();
 		Place place = member.getPlace();
 
@@ -292,7 +284,7 @@ public class MemberController {
 	public String detele(@PathVariable String id, Model model) {
 
 		//idからMemberを取得
-		Member member = memberRepository.findById(id).orElse(new Member());
+		Member member = memberService.findById(id).orElse(new Member());
 		Position position = member.getPosition();
 		Place place = member.getPlace();
 
@@ -306,7 +298,7 @@ public class MemberController {
 		model.addAttribute("member", member);
 
 		//削除処理
-		memberRepository.deleteById(id);
+		memberService.deleteById(id);
 
 		return "member/deleteComp";
 	}
@@ -321,7 +313,7 @@ public class MemberController {
 	public String detail(@PathVariable String id, Model model) {
 
 		//IDからMemberのインスタンスを取得
-		Member member = memberRepository.findById(id).orElse(new Member());
+		Member member = memberService.findById(id).orElse(new Member());
 
 		if (Objects.isNull(member.getMemberId())) {
 			return "redirect:/member/list";
